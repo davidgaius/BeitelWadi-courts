@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Beit El Wadi Bookings</title>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;800&family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F3F2EF;--card:#fff;--ink:#1C1B19;--mute:#5E5C57;--line:#D6D3CC;--line2:#B9B5AC;--olive:#3F3D39;--pine:#3F3D39;--sun:#B9B5AC;--head:#1C1B19;--c-camp:#7B766D;--c-group:#45423D;--c-party:#CFC9BD;--c-private:#111110;--free:#FFFFFF;--zebra:#F8F7F5;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121211;--card:#1B1B19;--ink:#F0EFEB;--mute:#A09D96;--line:#33322F;--line2:#4A4844;--olive:#7A766E;--pine:#CFCBC3;--sun:#5E5C57;--head:#0A0A09;--free:#161615;--zebra:#1F1F1D}}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 Figtree,Cairo,system-ui,sans-serif}
+header{background:var(--head);color:#fff;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+header h1{margin:0;font-size:20px;font-weight:800}
+header small{opacity:.8;display:block;font-weight:400}
+button{font:inherit;cursor:pointer;border:0;border-radius:10px;padding:9px 14px;font-weight:600}
+.primary{background:var(--olive);color:#fff}
+.ghost{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--sun);outline-offset:1px}
+.bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:12px 16px}
+.bar .date{font-weight:800;font-size:18px;flex:1;min-width:150px}
+input,select,textarea{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 10px;width:100%;min-width:0}
+.tabs{display:flex;gap:6px;padding:0 16px}
+.tab{background:transparent;color:var(--mute);border-radius:10px 10px 0 0}
+.tab.on{background:var(--card);color:var(--ink)}
+.legend{display:flex;gap:12px;flex-wrap:wrap;padding:10px 16px;font-size:13px;color:var(--mute)}
+.legend{font-size:14px!important;color:var(--ink)!important}.legend i{display:inline-block;width:16px;height:16px;border-radius:4px;margin-inline-end:6px;vertical-align:-3px;border:1px solid var(--line2)}
+main{padding:0 16px 40px}
+.panel{background:var(--card);border-radius:0 14px 14px 14px;border:1px solid var(--line)}
+.scroll{overflow-x:auto}
+.grid{min-width:2400px}
+.row{display:flex;border-bottom:1px solid var(--line2)}
+.row:nth-child(even) .track .cell{background:var(--zebra)}
+.row:last-child{border:0}
+.lab{width:170px;flex:none;padding:10px 12px;font-size:16px;display:flex;align-items:center;position:sticky;left:0;background:var(--card);z-index:3;font-weight:600;border-right:1px solid var(--line)}
+.gh{background:var(--head);font-size:14px;font-weight:800;color:#fff;padding:7px 12px;position:sticky;left:0;width:100%;letter-spacing:.3px}
+.track{flex:1;position:relative;display:flex;min-height:56px}
+.cell{flex:1;border-left:1px dotted var(--line);background:var(--free);cursor:pointer;min-height:56px}
+.cell:nth-child(4n+3){border-left:1px solid var(--line)}
+.cell:nth-child(4n+1){border-left:2px solid var(--line2)}
+.cell:hover{background:color-mix(in srgb,var(--sun) 55%,transparent)!important}
+.hr{flex:4;font-size:14px;font-weight:800;color:var(--ink);padding:8px 0 8px 6px;border-left:2px solid var(--line2);background:var(--bg)}
+.bk{position:absolute;top:3px;bottom:3px;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.35);display:flex;flex-direction:column;justify-content:center;align-items:flex-start;color:#fff;padding:2px 9px;font-size:14px;font-weight:700;line-height:1.25;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;z-index:2;cursor:pointer;border:0;text-align:left}
+.list{padding:8px}
+.item{display:flex;gap:12px;padding:12px;border-bottom:1px solid var(--line);align-items:center;cursor:pointer}
+.item:last-child{border:0}
+.item .t{width:110px;flex:none;font-weight:800}
+.dot{width:10px;height:36px;border-radius:5px;flex:none}
+.empty{padding:28px;text-align:center;color:var(--mute)}
+dialog{border:0;border-radius:16px;padding:0;max-width:560px;width:calc(100% - 24px);background:var(--card);color:var(--ink)}
+dialog::backdrop{background:rgba(20,20,18,.6)}
+form{padding:18px;display:grid;gap:12px}
+form h2{margin:0}
+label{font-size:13px;font-weight:600;color:var(--mute);display:block;margin-bottom:3px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.three{display:grid;grid-template-columns:1fr 1fr;gap:10px}.three>div,.two>div{min-width:0}.three>div:first-child{grid-column:1/-1}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{background:var(--bg);color:var(--ink);border:1px solid var(--line);padding:6px 10px;font-size:13px}
+.chip.on{background:var(--olive);color:#fff;border-color:var(--olive)}
+.gl{font-size:12px;font-weight:800;color:var(--pine);width:100%;margin-top:4px}
+.err{background:var(--bg);color:var(--ink);padding:10px;border-radius:10px;font-weight:600;border:1px solid var(--line2);border-inline-start:5px solid var(--ink)}
+.acts{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.danger{background:var(--card);color:var(--ink);border:2px solid var(--ink);margin-inline-end:auto}
+#lock{min-height:100vh;display:grid;place-items:center;padding:20px;background:var(--head)}
+#lock .box{background:var(--card);border-radius:18px;padding:26px;max-width:340px;width:100%;display:grid;gap:12px;text-align:center}
+#lock h1{margin:0;font-size:22px}#lock p{margin:0;color:var(--mute)}
+#lock input{text-align:center;font-size:18px;letter-spacing:2px}
+.hbtns{display:flex;gap:8px}
+body.ro .cell{cursor:default}body.ro .cell:hover{background:var(--free)}
+[hidden]{display:none!important}
+.scroll{direction:ltr}.lab{unicode-bidi:plaintext}
+[lang=ar] *{letter-spacing:0!important}
+.ctl{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;padding:12px}
+.ctl>div{min-width:0}.ctl input[type=number]{width:90px}
+.sheet{padding:14px}.sheet h2{margin:0 0 10px;font-size:20px}
+.cal{width:100%;border-collapse:collapse;table-layout:fixed}
+.cal th{background:var(--bg);font-size:12px;padding:6px;border:1px solid var(--line)}
+.cal td{vertical-align:top;border:1px solid var(--line);height:96px;padding:4px;font-size:11px;overflow:hidden;word-break:break-word}
+.cal td.off{background:var(--free)}.cal .dn{font-weight:800;font-size:12px;margin-bottom:2px}
+.pe{border-inline-start:3px solid var(--olive);padding-inline-start:4px;margin-bottom:3px;line-height:1.25}
+.pe small{color:var(--mute);display:block}
+.lt{width:100%;border-collapse:collapse;font-size:13px}
+.lt th,.lt td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:start;vertical-align:top}
+.lt th{background:var(--bg);font-size:12px}
+@page{size:A4 landscape;margin:10mm}
+@media print{
+ body{background:#fff;color:#000}
+ header,.bar,.tabs,.legend,.noprint,dialog,#lock{display:none!important}
+ main{padding:0}.panel{border:0;border-radius:0;background:#fff}
+ .sheet{padding:0;color:#000}
+ .cal th,.cal td,.lt th,.lt td{border-color:#999;color:#000}
+ .cal th,.lt th{background:#eee!important}.cal td.off{background:#f6f6f6}
+ .cal td{height:auto;min-height:70px}.pe small{color:#444}
+ .pe,.cal th,.lt th{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ tr{break-inside:avoid}
+}
+</style><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+</head><body>
+<div id="lock"><form class="box" id="lf" onsubmit="return false"><h1 data-i="brand"></h1><p data-i="signintxt"></p><input id="em" type="text" autocomplete="username" autocapitalize="none" autocorrect="off" data-ph="user"><input id="code" type="password" autocomplete="current-password" data-ph="pass"><div id="lerr" class="err" hidden></div><button class="primary" id="unlock" data-i="signin"></button><button type="button" class="ghost langb"></button></form></div>
+<div id="app" hidden>
+<header><h1><span data-i="brand"></span><small><span data-i="sub"></span> <span id="role"></span></small></h1><div class="hbtns"><button type="button" class="ghost langb"></button><button class="primary" id="new" data-i="newbtn"></button><button class="ghost" id="lockbtn" data-i="signout"></button></div></header>
+<div class="bar">
+  <button class="ghost" id="prev" aria-label="Previous day">‹</button>
+  <div class="date" id="dlabel"></div>
+  <button class="ghost" id="next" aria-label="Next day">›</button>
+  <button class="ghost" id="today" data-i="today"></button>
+  <input type="date" id="dpick" style="width:auto" aria-label="Pick a date">
+</div>
+<div class="tabs"><button class="tab on" id="t1" data-i="t1"></button><button class="tab" id="t2" data-i="t2"></button><button class="tab" id="t3" data-i="t3"></button><button class="tab" id="t4" data-i="t4"></button></div>
+<div class="bar" id="hbar" hidden><input id="hq" data-ph="search"></div>
+<main><div class="panel" id="panel"></div></main>
+<div class="legend" id="legend"></div>
+</div>
+
+<dialog id="dlg"><form id="f" method="dialog" onsubmit="return false">
+  <h2 id="ftitle"></h2>
+  <div id="ferr"></div>
+  <div><label for="name" data-i="lname"></label><input id="name" required data-ph="nameph"></div>
+  <div class="two"><div><label for="type" data-i="ltype"></label><select id="type"></select></div><div><label for="people" data-i="lpeople"></label><input id="people" type="number" min="1" inputmode="numeric"></div></div>
+  <div><label data-i="lwhere"></label><div class="chips" id="chips"></div></div>
+  <div class="three"><div><label for="date" data-i="ldate"></label><input id="date" type="date"></div><div><label for="start" data-i="lfrom"></label><select id="start"></select></div><div><label for="end" data-i="lto"></label><select id="end"></select></div></div>
+  <div class="two"><div><label for="phone" data-i="lphone"></label><input id="phone" type="tel" inputmode="tel"></div><div id="repbox"><label for="rep" data-i="lrep"></label><input id="rep" type="number" min="1" max="60" value="1"></div></div>
+  <div><label for="notes" data-i="lnotes"></label><textarea id="notes" rows="2"></textarea></div>
+  <div class="acts"><button type="button" class="danger" id="del" hidden data-i="del"></button><button type="button" class="ghost" id="cancel" data-i="cancel"></button><button type="button" class="primary" id="save" data-i="save"></button></div>
+</form></dialog>
+
+<script>
+const GROUPS=[
+ ["Courts",["Volleyball 1","Volleyball 2","Basketball 1","Basketball 2","Dodgeball 1","Dodgeball 2","Pickleball 1","Pickleball 2","Padel 1","Padel 2","Padel 3","Beach Handball","Tennis","Squash 1","Squash 2"]],
+ ["Fields",["Big Stadium","Small Stadium","Kora Banat"]],
+ ["Adventure",["Zipline & High Ropes","Campfire"]],
+ ["Outdoor",["Pool","Park","Pergola"]]];
+const TYPES={camp:["Camp","var(--c-camp)","#fff"],group:["Group","var(--c-group)","#fff"],party:["Party / event","var(--c-party)","#14160F"],private:["Private","var(--c-private)","#fff"]};
+const H0=8,H1=24;
+let day=iso(new Date()),view="s",editing=null,picked=new Set(),data=[],canEdit=false,pm=iso(new Date()).slice(0,7),pp="",ps="cal";
+const $=id=>document.getElementById(id);
+
+let lang="en",roleKey="";try{lang=localStorage.getItem("bew_lang")==="ar"?"ar":"en"}catch(e){}
+const T={en:{brand:"Beit El Wadi",sub:"Reservations",signintxt:"Sign in to open the bookings.",user:"Username or email",pass:"Password",signin:"Sign in",signout:"Sign out",newbtn:"+ New booking",today:"Today",t1:"Schedule",t2:"Daylist",t3:"History",search:"Search all bookings by group, place or phone",g_Courts:"Courts",g_Fields:"Fields",g_Adventure:"Adventure",g_Outdoor:"Outdoor",camp:"Camp",group:"Group",party:"Party / event",private:"Private",legendtip:"Each small box = 15 minutes. Tap an empty box to book. Tap a bar to edit.",lname:"Camp or group name",nameph:"e.g. Summer Camp – Blue Team",ltype:"Type",lpeople:"Number of people",lwhere:"Where (tap one or more)",ldate:"Date",lfrom:"From",lto:"To",lphone:"Contact phone",lrep:"Repeat for how many days?",lnotes:"Notes",del:"Delete booking",cancel:"Cancel",save:"Save booking",newb:"New booking",edit:"Edit booking",details:"Booking details",empty_day:"Nothing booked on this day yet. Tap “New booking” to add one.",empty_hist:"No bookings found.",to:"to",people:"people",e_name:"Add a camp or group name.",e_where:"Choose at least one place to book.",e_time:"The end time must be after the start time.",e_save:"Could not save. Check your internet connection and that your account is allowed to edit.",e_del:"Could not delete this booking.",confirmdel:"Delete this booking?",bad:"Wrong username or password.",net:"No internet connection.",editor:"Editor",viewer:"View only",prev:"Preview",dbfail:"Cannot read the database - check the database rules",t4:"Print",pmonth:"Month",pyear:"Year",pplace:"Place",pall:"All places",pstyle:"Layout",pcal:"Calendar",plist:"List",pbtn:"Print",pdate:"Date",ptime:"Time",pname:"Camp / group",pplaceh:"Place",ppeople:"People",pphone:"Phone",pnone:"No bookings this month."},
+ar:{brand:"بيت الوادي",sub:"الحجوزات",signintxt:"سجّل الدخول لفتح الحجوزات.",user:"اسم المستخدم أو البريد الإلكتروني",pass:"كلمة المرور",signin:"تسجيل الدخول",signout:"تسجيل الخروج",newbtn:"+ حجز جديد",today:"اليوم",t1:"الجدول",t2:"قائمة اليوم",t3:"السجل",search:"ابحث في كل الحجوزات بالاسم أو المكان أو الهاتف",g_Courts:"الملاعب",g_Fields:"ملاعب كرة القدم",g_Adventure:"المغامرات",g_Outdoor:"الأماكن الخارجية",camp:"معسكر",group:"مجموعة",party:"حفلة / مناسبة",private:"خاص",legendtip:"كل مربع صغير = 15 دقيقة. اضغط على مربع فارغ للحجز. اضغط على الشريط للتعديل.",lname:"اسم المعسكر أو المجموعة",nameph:"مثال: المعسكر الصيفي – الفريق الأزرق",ltype:"النوع",lpeople:"عدد الأشخاص",lwhere:"المكان (اختر مكانًا أو أكثر)",ldate:"التاريخ",lfrom:"من",lto:"إلى",lphone:"هاتف التواصل",lrep:"كرّر لعدد كم يوم؟",lnotes:"ملاحظات",del:"حذف الحجز",cancel:"إلغاء",save:"حفظ الحجز",newb:"حجز جديد",edit:"تعديل الحجز",details:"تفاصيل الحجز",empty_day:"لا توجد حجوزات في هذا اليوم بعد. اضغط «حجز جديد» للإضافة.",empty_hist:"لا توجد حجوزات.",to:"إلى",people:"أشخاص",e_name:"أضف اسم المعسكر أو المجموعة.",e_where:"اختر مكانًا واحدًا على الأقل.",e_time:"يجب أن يكون وقت النهاية بعد وقت البداية.",e_save:"تعذّر الحفظ. تحقق من الإنترنت ومن أن حسابك مسموح له بالتعديل.",e_del:"تعذّر حذف هذا الحجز.",confirmdel:"هل تريد حذف هذا الحجز؟",bad:"اسم المستخدم أو كلمة المرور غير صحيحة.",net:"لا يوجد اتصال بالإنترنت.",editor:"محرّر",viewer:"عرض فقط",prev:"معاينة",dbfail:"تعذّر قراءة قاعدة البيانات - راجع قواعد قاعدة البيانات",t4:"طباعة",pmonth:"الشهر",pyear:"السنة",pplace:"المكان",pall:"كل الأماكن",pstyle:"الشكل",pcal:"تقويم",plist:"قائمة",pbtn:"اطبع",pdate:"التاريخ",ptime:"الوقت",pname:"المعسكر / المجموعة",pplaceh:"المكان",ppeople:"الأشخاص",pphone:"الهاتف",pnone:"لا توجد حجوزات هذا الشهر."}};
+const VN={"Volleyball 1":"الكرة الطائرة 1","Volleyball 2":"الكرة الطائرة 2","Basketball 1":"كرة السلة 1","Basketball 2":"كرة السلة 2","Dodgeball 1":"دودج بول 1","Dodgeball 2":"دودج بول 2","Pickleball 1":"بيكل بول 1","Pickleball 2":"بيكل بول 2","Padel 1":"بادل 1","Padel 2":"بادل 2","Padel 3":"بادل 3","Beach Handball":"هاندبول شاطئي","Tennis":"تنس","Squash 1":"اسكواش 1","Squash 2":"اسكواش 2","Big Stadium":"الملعب الكبير","Small Stadium":"الملعب الصغير","Kora Banat":"كورة بنات","Zipline & High Ropes":"الزيب لاين والحبال العالية","Campfire":"نار المخيم","Pool":"المسبح","Park":"الحديقة","Pergola":"البرجولة"};
+const t=k=>(T[lang][k]??T.en[k]??k);
+const vn=v=>lang=="ar"?(VN[v]||v):v;
+function clash(n,c){const a=fmt(c.start),b=fmt(c.end);return lang=="ar"?esc(vn(n.venue))+' محجوز بالفعل بتاريخ '+n.date+' من '+a+' إلى '+b+' باسم “'+esc(c.name)+'”. اختر وقتًا أو مكانًا آخر.':esc(n.venue)+' is already booked on '+n.date+' from '+a+' to '+b+' by “'+esc(c.name)+'”. Pick another time or place.'}
+function applyLang(){
+ const r=document.documentElement;r.lang=lang;r.dir=lang=="ar"?"rtl":"ltr";
+ document.querySelectorAll("[data-i]").forEach(e=>e.textContent=t(e.dataset.i));
+ document.querySelectorAll("[data-ph]").forEach(e=>e.placeholder=t(e.dataset.ph));
+ document.querySelectorAll(".langb").forEach(e=>e.textContent=lang=="ar"?"English":"العربية");
+ $("prev").textContent=lang=="ar"?"›":"‹";$("next").textContent=lang=="ar"?"‹":"›";
+ $("role").textContent=roleKey?"· "+t(roleKey):"";
+ const tv=$("type").value||"camp",sv=$("start").value,ev=$("end").value;
+ $("type").innerHTML=Object.keys(TYPES).map(k=>'<option value="'+k+'">'+t(k)+'</option>').join("");$("type").value=tv;
+ let o="";for(let h=H0;h<=H1;h+=.25)o+='<option value="'+h+'">'+fmt(h)+'</option>';
+ $("start").innerHTML=o;$("end").innerHTML=o;if(sv)$("start").value=sv;if(ev)$("end").value=ev;
+ $("legend").innerHTML=Object.entries(TYPES).map(([k,v])=>'<span><i style="background:'+v[1]+'"></i>'+t(k)+'</span>').join("")+'<span>'+t("legendtip")+'</span>';
+ drawChips();render();
+}
+function iso(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function addDays(s,n){const d=new Date(s+"T12:00:00");d.setDate(d.getDate()+n);return iso(d)}
+function fmt(h){const m=Math.round((h%1)*60),hh=Math.floor(h),ap=lang=="ar"?((hh>=12&&hh<24)?"م":"ص"):((hh>=12&&hh<24)?"pm":"am");return ((hh+11)%12+1)+(m?":"+String(m).padStart(2,"0"):"")+" "+ap}
+function esc(s){return String(s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+
+function printHtml(){
+ const [Y,M]=pm.split("-").map(Number),loc=lang=="ar"?"ar-EG":"en-GB",pad=n=>String(n).padStart(2,"0");
+ let mo="";for(let i=0;i<12;i++)mo+='<option value="'+i+'"'+(i==M-1?' selected':'')+'>'+new Date(Y,i,1).toLocaleDateString(loc,{month:"long"})+'</option>';
+ let pl='<option value="">'+t("pall")+'</option>';GROUPS.forEach(([g,vs])=>{pl+='<optgroup label="'+t("g_"+g)+'">'+vs.map(v=>'<option value="'+esc(v)+'"'+(v==pp?' selected':'')+'>'+esc(vn(v))+'</option>').join("")+'</optgroup>'});
+ const ctl='<div class="ctl noprint"><div><label for="pmm">'+t("pmonth")+'</label><select id="pmm">'+mo+'</select></div><div><label for="pyy">'+t("pyear")+'</label><input id="pyy" type="number" min="2020" max="2100" value="'+Y+'"></div><div><label for="ppl">'+t("pplace")+'</label><select id="ppl">'+pl+'</select></div><div><label for="pst">'+t("pstyle")+'</label><select id="pst"><option value="cal"'+(ps=="cal"?' selected':'')+'>'+t("pcal")+'</option><option value="list"'+(ps=="list"?' selected':'')+'>'+t("plist")+'</option></select></div><div><button class="primary" id="pbtn">🖨 '+t("pbtn")+'</button></div></div>';
+ const days=new Date(Y,M,0).getDate();
+ const mine=data.filter(b=>b.date.slice(0,7)==pm&&(!pp||b.venue==pp)).sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:a.start-b.start);
+ const title=new Date(Y,M-1,1).toLocaleDateString(loc,{month:"long",year:"numeric"})+' – '+(pp?vn(pp):t("pall"));
+ let sh='<div class="sheet"><h2>'+t("brand")+' · '+esc(title)+'</h2>';
+ if(ps=="cal"){
+  const ws=lang=="ar"?6:1,first=new Date(Y,M-1,1).getDay(),off=(first-ws+7)%7;
+  sh+='<table class="cal"><tr>';for(let i=0;i<7;i++)sh+='<th>'+new Date(2024,0,7+((ws+i)%7)).toLocaleDateString(loc,{weekday:"short"})+'</th>';sh+='</tr><tr>';
+  for(let c=0;c<off;c++)sh+='<td class="off"></td>';
+  let col=off;
+  for(let d=1;d<=days;d++){
+   if(col==7){sh+='</tr><tr>';col=0}
+   const ds=pm+'-'+pad(d);
+   sh+='<td><div class="dn">'+d+'</div>'+mine.filter(b=>b.date==ds).map(b=>'<div class="pe" style="border-color:'+TYPES[b.type][1]+'"><b>'+fmt(b.start)+'–'+fmt(b.end)+'</b> '+esc(b.name)+(pp?'':'<small>'+esc(vn(b.venue))+'</small>')+'</div>').join("")+'</td>';
+   col++;
+  }
+  while(col<7){sh+='<td class="off"></td>';col++}
+  sh+='</tr></table>';
+ }else{
+  sh+=mine.length?'<table class="lt"><tr><th>'+t("pdate")+'</th><th>'+t("ptime")+'</th><th>'+t("pname")+'</th><th>'+t("pplaceh")+'</th><th>'+t("ppeople")+'</th><th>'+t("pphone")+'</th></tr>'+mine.map(b=>'<tr><td>'+b.date+'</td><td>'+fmt(b.start)+' – '+fmt(b.end)+'</td><td>'+esc(b.name)+'</td><td>'+esc(vn(b.venue))+'</td><td>'+esc(b.people||"")+'</td><td>'+esc(b.phone||"")+'</td></tr>').join("")+'</table>':'<div class="empty">'+t("pnone")+'</div>';
+ }
+ return ctl+sh+'</div>';
+}
+function wirePrint(){
+ const go=()=>{const y=+$("pyy").value;if(!(y>=2020&&y<=2100))return;pm=y+"-"+String(+$("pmm").value+1).padStart(2,"0");pp=$("ppl").value;ps=$("pst").value;render()};
+ ["pmm","pyy","ppl","pst"].forEach(i=>$(i).onchange=go);
+ $("pbtn").onclick=()=>window.print();
+}
+function render(){
+ $("dlabel").textContent=new Date(day+"T12:00:00").toLocaleDateString(lang=="ar"?"ar-EG":"en-GB",{weekday:"long",day:"numeric",month:"long"});
+ $("dpick").value=day;$("t1").classList.toggle("on",view=="s");$("t2").classList.toggle("on",view=="l");$("t3").classList.toggle("on",view=="h");$("t4").classList.toggle("on",view=="p");$("hbar").hidden=view!="h";
+ const todays=data.filter(b=>b.date==day).sort((a,b)=>a.start-b.start);
+ const info=b=>'<b>'+esc(b.name)+'</b><br>'+esc(vn(b.venue))+(b.people?' · '+b.people+' '+t("people"):'')+(b.phone?' · '+esc(b.phone):'');
+ let h="";
+ if(view=="s"){
+  h='<div class="scroll"><div class="grid"><div class="row"><div class="lab" style="border-bottom:0"></div><div class="track" style="min-height:0">';
+  for(let i=H0;i<H1;i++)h+='<div class="hr">'+fmt(i).replace(":00","")+'</div>';
+  h+='</div></div>';
+  GROUPS.forEach(([g,vs])=>{
+   h+='<div class="row"><div class="gh">'+t("g_"+g)+'</div></div>';
+   vs.forEach(v=>{
+    h+='<div class="row"><div class="lab">'+esc(vn(v))+'</div><div class="track" data-v="'+esc(v)+'">';
+    for(let i=H0;i<H1;i+=.25)h+='<div class="cell" data-h="'+i+'" title="'+esc(vn(v))+' '+fmt(i)+'"></div>';
+    todays.filter(b=>b.venue==v).forEach(b=>{
+     const l=(b.start-H0)/(H1-H0)*100,w=(b.end-b.start)/(H1-H0)*100;
+     h+='<button class="bk" data-id="'+b.id+'" style="left:'+l+'%;width:'+w+'%;background:'+TYPES[b.type][1]+';color:'+TYPES[b.type][2]+'" title="'+esc(b.name)+' '+fmt(b.start)+'–'+fmt(b.end)+'"><span style="overflow:hidden;text-overflow:ellipsis;max-width:100%">'+esc(b.name)+'</span><span style="font-size:12px;font-weight:600;opacity:.85">'+fmt(b.start)+'–'+fmt(b.end)+'</span></button>';
+    });
+    h+='</div></div>';
+   });
+  });
+  h+='</div></div>';
+ }else if(view=="p"){
+  h=printHtml();
+ }else if(view=="h"){
+  const q=$("hq").value.toLowerCase();
+  const all=data.filter(b=>(b.name+" "+b.venue+" "+vn(b.venue)+" "+(b.phone||"")+" "+(b.notes||"")).toLowerCase().includes(q)).sort((a,b)=>a.date<b.date?1:a.date>b.date?-1:a.start-b.start);
+  h='<div class="list">';
+  if(!all.length)h+='<div class="empty">'+t("empty_hist")+'</div>';
+  all.forEach(b=>{h+='<div class="item" data-id="'+b.id+'"><div class="dot" style="background:'+TYPES[b.type][1]+'"></div><div class="t">'+b.date+'<br><span style="font-weight:400;color:var(--mute)">'+fmt(b.start)+' – '+fmt(b.end)+'</span></div><div>'+info(b)+'</div></div>'});
+  h+='</div>';
+ }else{
+  h='<div class="list">';
+  if(!todays.length)h+='<div class="empty">'+t("empty_day")+'</div>';
+  todays.forEach(b=>{h+='<div class="item" data-id="'+b.id+'"><div class="dot" style="background:'+TYPES[b.type][1]+'"></div><div class="t">'+fmt(b.start)+'<br><span style="font-weight:400;color:var(--mute)">'+t("to")+' '+fmt(b.end)+'</span></div><div>'+info(b)+(b.notes?'<br><span style="color:var(--mute)">'+esc(b.notes)+'</span>':'')+'</div></div>'});
+  h+='</div>';
+ }
+ $("panel").innerHTML=h;
+ if(view=="p")wirePrint();
+}
+
+function drawChips(){
+ $("chips").innerHTML=GROUPS.map(([g,vs])=>'<div class="gl">'+t("g_"+g)+'</div>'+vs.map(v=>'<button type="button" class="chip'+(picked.has(v)?' on':'')+'" data-v="'+esc(v)+'">'+esc(vn(v))+'</button>').join("")).join("");
+}
+$("chips").onclick=e=>{const v=e.target.dataset.v;if(!v||!canEdit)return;
+ if(editing){picked=new Set([v])}else{picked.has(v)?picked.delete(v):picked.add(v)}drawChips()};
+
+function openForm(b,venue,hour){
+ if(!canEdit&&!b)return;
+ editing=b?b.id:null;picked=new Set(b?[b.venue]:venue?[venue]:[]);
+ $("ftitle").textContent=b?t("edit"):t("newb");$("ferr").innerHTML="";
+ $("name").value=b?b.name:"";$("type").value=b?b.type:"camp";$("people").value=b?b.people||"":"";
+ $("date").value=b?b.date:day;$("start").value=b?b.start:(hour??9);
+ $("end").value=b?b.end:Math.min((hour??9)+1,H1);$("phone").value=b?b.phone||"":"";$("notes").value=b?b.notes||"":"";
+ $("rep").value=1;$("repbox").hidden=!!b;$("del").hidden=!b||!canEdit;$("save").hidden=!canEdit;["name","type","people","date","start","end","phone","notes","rep"].forEach(i=>$(i).disabled=!canEdit);if(!canEdit)$("ftitle").textContent=t("details");drawChips();$("dlg").showModal();
+}
+function err(m){$("ferr").innerHTML='<div class="err">'+m+'</div>';$("dlg").scrollTop=0}
+$("save").onclick=()=>{
+ const name=$("name").value.trim(),s=+$("start").value,e=+$("end").value,rep=editing?1:Math.max(1,Math.min(60,+$("rep").value||1));
+ if(!name)return err(t("e_name"));
+ if(!picked.size)return err(t("e_where"));
+ if(e<=s)return err(t("e_time"));
+ const nb=[];
+ for(let i=0;i<rep;i++)picked.forEach(v=>nb.push({id:"b"+Date.now()+Math.random().toString(36).slice(2,7),date:addDays($("date").value,i),venue:v,start:s,end:e,name,type:$("type").value,people:$("people").value,phone:$("phone").value.trim(),notes:$("notes").value.trim()}));
+ for(const n of nb){const c=data.find(b=>b.id!=editing&&b.venue==n.venue&&b.date==n.date&&b.start<n.end&&n.start<b.end);
+  if(c)return err(clash(n,c))}
+ const up={};if(editing)up[editing]=null;nb.forEach(n=>up[n.id]=n);
+ db.ref("bookings").update(up).then(()=>{day=nb[0].date;$("dlg").close()}).catch(()=>err(t("e_save")));
+};
+$("del").onclick=()=>{if(confirm(t("confirmdel")))db.ref("bookings/"+editing).remove().then(()=>$("dlg").close()).catch(()=>err(t("e_del")))};
+$("cancel").onclick=()=>$("dlg").close();
+$("new").onclick=()=>openForm();
+$("panel").onclick=e=>{
+ const bk=e.target.closest("[data-id]");if(bk)return openForm(data.find(b=>b.id==bk.dataset.id));
+ const c=e.target.closest(".cell");if(c)openForm(null,c.parentElement.dataset.v,+c.dataset.h);
+};
+$("prev").onclick=()=>{day=addDays(day,-1);render()};
+$("next").onclick=()=>{day=addDays(day,1);render()};
+$("today").onclick=()=>{day=iso(new Date());render()};
+$("dpick").onchange=e=>{if(e.target.value){day=e.target.value;render()}};
+$("t1").onclick=()=>{view="s";render()};$("t2").onclick=()=>{view="l";render()};$("t3").onclick=()=>{view="h";render()};$("t4").onclick=()=>{view="p";render()};
+$("hq").oninput=render;
+document.querySelectorAll(".langb").forEach(b=>b.onclick=()=>{lang=lang=="ar"?"en":"ar";try{localStorage.setItem("bew_lang",lang)}catch(e){}applyLang()});
+applyLang();
+// ===== START FIREBASE SETTINGS =====
+const firebaseConfig = {
+  apiKey: "AIzaSyAhWYfKmkHFkneQ031gRl7IUbA8dzL6fBI",
+  authDomain: "bew-court-schedule-f6ce4.firebaseapp.com",
+  databaseURL: "https://bew-court-schedule-f6ce4-default-rtdb.firebaseio.com",
+  projectId: "bew-court-schedule-f6ce4",
+  storageBucket: "bew-court-schedule-f6ce4.firebasestorage.app",
+  messagingSenderId: "480022955373",
+  appId: "1:480022955373:web:22040747140a6500fd0664"
+};
+// ===== END FIREBASE SETTINGS =====
+/* A username typed without @ gets this added, so "reception" becomes reception@beitelwadi.com */
+const EMAIL_DOMAIN="@beitelwadi.com";
+const CONFIG_MISSING=/PASTE/.test(firebaseConfig.apiKey);
+let auth,db;
+if(!CONFIG_MISSING){firebase.initializeApp(Object.assign({databaseURL:"https://bew-court-schedule-f6ce4-default-rtdb.firebaseio.com"},firebaseConfig));auth=firebase.auth();db=firebase.database()}
+let off=null;
+function show(ok){$("lock").hidden=ok;$("app").hidden=!ok}
+function login(){
+ if(CONFIG_MISSING){$("lerr").textContent="Firebase settings have not been added to this file yet.";$("lerr").hidden=false;return}
+const raw=$("em").value.trim(),pw=$("code").value;if(!raw||!pw)return;
+ $("unlock").disabled=true;
+ auth.signInWithEmailAndPassword(raw.includes("@")?raw:raw+EMAIL_DOMAIN,pw)
+ .catch(e=>{$("lerr").textContent=(e.code=="auth/network-request-failed"?t("net"):t("bad"))+" ["+(e.code||"error")+"] Email tried: "+(raw.includes("@")?raw:raw+EMAIL_DOMAIN)+" · password length: "+pw.length;$("lerr").hidden=false})
+ .finally(()=>{$("unlock").disabled=false})}
+$("unlock").onclick=login;$("code").onkeydown=e=>{if(e.key=="Enter")login()};$("em").onkeydown=e=>{if(e.key=="Enter")login()};
+$("lockbtn").onclick=()=>{if($("dlg").open)$("dlg").close();auth.signOut()};
+if(!CONFIG_MISSING)auth.onAuthStateChanged(async u=>{
+ if(off){off();off=null}
+ if(!u){canEdit=false;data=[];show(false);return}
+ $("code").value="";$("lerr").hidden=true;
+ let dbfail=false;
+ canEdit=true;
+ $("new").hidden=!canEdit;document.body.classList.toggle("ro",!canEdit);roleKey=dbfail?"dbfail":(canEdit?"editor":"viewer");applyLang();
+ show(true);
+ const ref=db.ref("bookings"),cb=ref.on("value",x=>{data=Object.values(x.val()||{});render()},()=>{data=[];roleKey="dbfail";applyLang()});
+ off=()=>ref.off("value",cb);render();
+});
+</script></body></html>
